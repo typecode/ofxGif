@@ -15,6 +15,7 @@ namespace ofxGIF
 
 		void append(string filename);		// not alpha channel
 		void append(ofPixels& pixels);
+		void append(ofPixels& pixels, int duration);
 	};
 
 	class fiGifLoader

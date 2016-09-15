@@ -176,6 +176,33 @@ namespace ofxGIF
 		}
 	}
 
+	void fiGifSaver::append(ofPixels& pixels, int duration)
+	{
+		if (gif)
+		{
+			FIBITMAP* page = ofxGIF::getBmpFromPixels(pixels);
+			
+			DWORD frameDuration = (DWORD) ((float)duration);
+			
+			FITAG *tag = FreeImage_CreateTag();
+
+			ofLog(OF_LOG_VERBOSE, "fiGifSaver::append tag: " + ofToString(tag));
+
+			if(tag) {
+				FreeImage_SetTagKey(tag, "FrameTime");
+				FreeImage_SetTagType(tag, FIDT_LONG);
+				FreeImage_SetTagCount(tag, 1);
+				FreeImage_SetTagLength(tag, 4);
+				FreeImage_SetTagValue(tag, &frameDuration);
+				FreeImage_SetMetadata(FIMD_ANIMATION, page, FreeImage_GetTagKey(tag), tag);
+				FreeImage_DeleteTag(tag);
+			}
+			
+			FreeImage_AppendPage(gif, page);
+			FreeImage_Unload(page);
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 
 	void fiGifLoader::load(string filename)
